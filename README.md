@@ -42,6 +42,12 @@ The datasheets containing Coreidae antennae classification contain similar forma
 
 The main difference is that in the uncertain and full datasets, antennae can also be classified as "No_data". <br>
 
+For the calibration points, we used the format suggested by the package "ape", where:
+- First column - "node", the number of the node in which the age should be place (i.e., where the fossil should be placed);
+- Second column - "age.min", the minimum age for that node;
+- Third column - "age.max", the maximum age for that node;
+- Fourth column - "soft.bounds", unused but required to run according to the function vignette.
+For information on which fossils we used, please check the Supplementary Information. 
 
 ## Reference
 
