@@ -20,10 +20,9 @@ The <i>"data"</i> folder contains all the data required to run our analyses. In 
 The <i>"evo.models"</i> folder contains saved evolutionary analyses. We saved them in different ".Rdata" files because some of them might take >5 minutes to run. Each file is a different analysis and they are called at different times in the code. <br>
 The <i>"phylo"</i> folder contains the phylogeny we used in the paper.
 We also have four files that are not inside any folder.
-- "All_records_Coreidae_antena.csv" - Contains all the species with the links to the images we used to categorize the species.
+- "Coreidae_Adults.csv" - Contains the classification of each antennomere and links to the images we used to categorize antennal morphology in adults. Also has links to primary taxonomic descriptions in a few instances.
+- "Coreidae_Nymphs_Full.csv" - Contains links to the images we used to categorize antennomere morphology. This is the full file, we collapsed it into genus for analyses.
 - "antennae-evol.html" - an Rmarkdown file with all the analyses performed.
-- "corr-t2-antena.Rdata" - the fossil-calibrated phylogeny using the "correlated" method from the package ape.
-- "relax-t2-antena.Rdata" - the fossil-calibrated phylogeny using the "relaxed" method from the package ape.
 
 
 ##### Dataset:
@@ -41,13 +40,6 @@ The datasheets containing Coreidae antennae classification contain similar forma
 - Ninth column - Antennae classification, whether we classified it as having expansion "Expansion", or having no expansion "Straight" <br>
 
 The main difference is that in the uncertain and full datasets, antennae can also be classified as "No_data". <br>
-
-For the calibration points, we used the format suggested by the package "ape", where:
-- First column - "node", the number of the node in which the age should be place (i.e., where the fossil should be placed);
-- Second column - "age.min", the minimum age for that node;
-- Third column - "age.max", the maximum age for that node;
-- Fourth column - "soft.bounds", unused but required to run according to the function vignette.
-For information on which fossils we used, please check the Supplementary Information. 
 
 ## Reference
 
