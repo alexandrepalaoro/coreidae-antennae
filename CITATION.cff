@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this software or data, please cite the paper below."
+title: "Code and data for: Developmental and Phylogenetic Patterns of Antennal Expansion in Leaf-Footed Bugs (Hemiptera: Coreidae)"
+type: software
+authors:
+  - family-names: Polli
+    given-names: Mariana
+    orcid: "https://orcid.org/0009-0005-0018-4561"
+  - family-names: Somjee
+    given-names: Ummat
+    orcid: "https://orcid.org/0000-0002-5130-3605"
+   - family-names: Palaoro
+    given-names: Alexandre V.
+    orcid: "https://0000-0002-8629-0728"
+license: MIT 
+repository-code: "https://github.com/alexandrepalaoro/coreidae-antennae"
+preferred-citation:
+  type: article
+  title: "Developmental and Phylogenetic Patterns of Antennal Expansion in Leaf-Footed Bugs (Hemiptera: Coreidae)"
+  authors:
+    - family-names: Polli
+      given-names: Mariana
+    - family-names: Somjee
+      given-names: Ummat
+    - family-names: Palaoro
+      given-names: Alexandre V.
+  journal: "EcoEvoARXIV"
+  year: 2026
+  doi: "10.xxxx/xxxxx"
