@@ -1,9 +1,9 @@
-# Evolution and Phylogenetic Conservatism of Antennal Morphology in Leaf-Footed Bugs (Coreidae)
+# Developmental and Phylogenetic Patterns of Antennal Expansion in Leaf-Footed Bugs (Hemiptera: Coreidae)
 
 Authors: Mariana Polli, Ummat Somjee & Alexandre V. Palaoro <br>
 ---
 
-Contact about code and analyses: marianapolli@ufpr.br or alexandre.palaoro@gmail.com <br>
+Contact about code and analyses: marianapolli12@gmail.com or alexandre.palaoro@gmail.com <br>
 
 ---
 
@@ -14,14 +14,15 @@ This paper is under evaluation in a scientific journal. If you use any of our co
 
 ##### File structure:
 
-We have three folders: <i>"code"</i>, <i>"data"</i>, <i>"evo.models"</i>, and "phylo".
+We have four folders: <i>"code"</i>, <i>"data"</i>, <i>"evo.models"</i>, and <i>"phylo"</i>.
 The <i>"code"</i> folder contains one file with all the code required to run the analyses. <br>
-The <i>"data"</i> folder contains all the data required to run our analyses. In it, you will find the datasets in ".csv". All the data files begin with the last date they were updated, and a descriptive name for the file. The file "Coreidae antena" contains all species in the phylogeny. The file containing the word "summarized" contain only the species we have information for and were not excluded during our search. The file containing the word "uncertain" contains the species we also do not have information for. <br>
+The <i>"data"</i> folder contains all the data required to run our analyses. In it, you will find the datasets in ".csv". All the data files begin with the last date they were updated, and a descriptive name for the file. The file "Coreidae Adults" contains all species data for adults. The files containing the word "genera" contains only one species at each genus. The file containing the word "summarized" contains only the species we have information for and were not excluded during our search. <br>
 The <i>"evo.models"</i> folder contains saved evolutionary analyses. We saved them in different ".Rdata" files because some of them might take >5 minutes to run. Each file is a different analysis and they are called at different times in the code. <br>
-The <i>"phylo"</i> folder contains the phylogeny we used in the paper.
-We also have four files that are not inside any folder.
+The <i>"phylo"</i> folder contains the phylogeny we used in the paper. <br>
+
+We also have three files that are not inside any folder.
 - "Coreidae_Adults.csv" - Contains the classification of each antennomere and links to the images we used to categorize antennal morphology in adults. Also has links to primary taxonomic descriptions in a few instances.
-- "Coreidae_Nymphs_Full.csv" - Contains links to the images we used to categorize antennomere morphology. This is the full file, we collapsed it into genus for analyses.
+- "Coreidae_Nymphs_Full.csv" - Contains the classification of each antennomere and links to the images we used to categorize antennomere morphology. This is the full file, we collapsed it into genus for analyses.
 - "antennae-evol.html" - an Rmarkdown file with all the analyses performed.
 
 
@@ -29,15 +30,20 @@ We also have four files that are not inside any folder.
 
 The datasheets containing Coreidae antennae classification contain similar formats.
 
-- First column - Species ID in number; <br>
-- Second column - how the species is written is the tips of the phylogeny file to match the information more easily;
-- Third column - "Species_name" that mirror how the name is written in the tips of the phylogeny file;
-- Fourth column - Family, since some outgroups are not Coreidae; <br>
-- Fifth column - Subfamily; <br>
-- Sixth column - Tribe; <br>
-- Seventh column - Genus; <br>
-- Eighth column - Species; <br>
-- Ninth column - Antennae classification, whether we classified it as having expansion "Expansion", or having no expansion "Straight" <br>
+First column - Species ID in number; <br>
+Second column - how the species is written is the tips of the phylogeny file to match the information more easily; <br>
+Third column - "Species_name" that mirror how the name is written in the tips of the phylogeny file; <br>
+Fourth column - Family, since some outgroups are not Coreidae; <br>
+Fifth column - Subfamily; <br>
+Sixth column - Tribe; <br>
+Seventh column - Genus; <br>
+Eighth column - Species; <br>
+Ninth column - Antennae classification, whether we classified it as having expansion "2", no expansion "1" or no data "0"; <br>
+Tenth column - State of antennomere I (varying from 0 to 2); <br>
+Eleventh column - State of antennomere II (varying from 0 to 2); <br>
+Twelfth column - State of antennomere III (varying from 0 to 2); <br>
+Thirteenth column - Sum of antennomeres (varying 0 to 6); <br>
+Fourteenth column- Reference of immages or papers used to classificate the species antennae. <br>
 
 The main difference is that in the uncertain and full datasets, antennae can also be classified as "No_data". <br>
 
@@ -47,21 +53,21 @@ Forthman, M., Phan, H., Miller, C. W., & Kimball, R. T. (2024). Phylogenetic pla
 
 ## Packages 
 
-The code was run in R software v4.5.1. <br>
+The code was run in R software v4.6.0. <br>
 Packages used: <br>
-- lubridate(v.1.9.4) <br>
-- forcats(v.1.0.1) <br>
-- stringr(v.1.5.2) <br>
-- dplyr(v.1.1.4) <br>
-- purrr(v.1.1.0) <br>
-- readr(v.2.1.5) <br>
-- tidyr(v.1.3.1) <br>
-- tibble(v.3.3.0) <br>
-- ggplot2(v.4.0.0) <br>
-- tidyverse(v.2.0.0) <br>
 - pander(v.0.6.6) <br>
+- lubridate(v.1.9.5) <br>
+- forcats(v.1.0.1) <br>
+- stringr(v.1.6.0) <br>
+- dplyr(v.1.2.1) <br>
+- purrr(v.1.2.2) <br>
+- readr(v.2.2.0) <br>
+- tidyr(v.1.3.2) <br>
+- tibble(v.3.3.1) <br>
+- ggplot2(v.4.0.3) <br>
+- tidyverse(v.2.0.0) <br>
 - diversitree(v.0.10-1) <br>
-- geiger(v.2.0.11) <br> 
-- phytools(v.2.4-4) <br>
-- maps(v.3.4.2.1) <br>
+- geiger(v.2.0.11) <br>
+- phytools(v.2.5-2) <br>
+- maps(v.3.4.3) <br>
 - ape(v.5.8-1)
