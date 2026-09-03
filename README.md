@@ -14,7 +14,7 @@ This paper is under evaluation in a scientific journal. If you use any of our co
 
 ##### File structure:
 
-We have four folders: <i>"code"</i>, <i>"data"</i>, <i>"evo.models"</i>, and <i>"phylo"</i>.
+We have four folders: <i>"code"</i>, <i>"data"</i>, <i>"evo.models"</i>, and <i>"phylo"</I>. <br>
 The <i>"code"</i> folder contains one file with all the code required to run the analyses. <br>
 The <i>"data"</i> folder contains all the data required to run our analyses. In it, you will find the datasets in ".csv". All the data files begin with the last date they were updated, and a descriptive name for the file. The file "Coreidae Adults" contains all species data for adults. The files containing the word "genera" contains only one species at each genus. The file containing the word "summarized" contains only the species we have information for and were not excluded during our search. <br>
 The <i>"evo.models"</i> folder contains saved evolutionary analyses. We saved them in different ".Rdata" files because some of them might take >5 minutes to run. Each file is a different analysis and they are called at different times in the code. <br>
