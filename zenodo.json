@@ -1,0 +1,56 @@
+{
+  "title": "Code and data for: Developmental and Phylogenetic Patterns of Antennal Expansion in Leaf-Footed Bugs (Hemiptera: Coreidae)",
+  "description": "<p>Data and R code for the comparative study of antennal expansion in leaf-footed bugs (Hemiptera: Coreidae). Contains the antennomere-by-antennomere scoring of antennal morphology for adults (species level) and nymphs (genus level), built from research-grade iNaturalist photographs and primary taxonomic descriptions, together with the phylogeny used, the stored Mk and hidden-rates model fits, and the R script that reproduces every ancestral-state reconstruction and figure.</p><p>Supplement to: Developmental and Phylogenetic Patterns of Antennal Expansion in Leaf-Footed Bugs (Hemiptera: Coreidae). <i>EcoEvoRxiv</i> preprint. <a href=\"https://doi.org/10.32942/X21X1M\">doi:10.32942/X21X1M</a></p><p>The phylogeny in <code>phylo/50p.treefile</code> is derived from Forthman, Phan, Miller &amp; Kimball (2024), <i>Zoological Journal of the Linnean Society</i> 202(3): zlae024.</p><p><b>Licensing.</b> The analysis code (.R, .html) is released under the MIT License. The data files, the phylogeny and the stored model output are released into the public domain under CC0 1.0 Universal. See LICENSE and LICENSE-DATA in the archive.</p>",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "mit",
+  "language": "eng",
+  "creators": [
+    {
+      "name": "Polli, Mariana",
+      "affiliation": "Universidade Federal do Paraná, Curitiba, Brazil",
+      "orcid": "0009-0005-0018-4561"
+    },
+    {
+      "name": "Somjee, Ummat",
+      "orcid": "0000-0002-5130-3605"
+    },
+    {
+      "name": "Palaoro, Alexandre V.",
+      "affiliation": "Universidade Federal do Paraná, Curitiba, Brazil",
+      "orcid": "0000-0002-8629-0728"
+    }
+  ],
+  "keywords": [
+    "antennal expansion",
+    "Coreidae",
+    "leaf-footed bugs",
+    "Hemiptera",
+    "ancestral state reconstruction",
+    "comparative methods",
+    "morphological diversity",
+    "nymph",
+    "ontogeny",
+    "exaggerated traits",
+    "hidden rates model"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.32942/X21X1M",
+      "relation": "isSupplementTo",
+      "resource_type": "publication-preprint",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "https://github.com/alexandrepalaoro/coreidae-antennae",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.1093/zoolinnean/zlae024",
+      "relation": "isDerivedFrom",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    }
+  ]
+}
