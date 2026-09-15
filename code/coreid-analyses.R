@@ -8,24 +8,24 @@ library(tidyverse)
 
 tt = read.tree(file = './phylo/50p.treefile')
 
-tips = read.csv(file = './data/antena_coreidae_summarised_2.csv', h =T, sep = ';')
+tips = read.csv(file = './data/25-10-25_antena_coreidae_summarised_2.csv', h =T, sep = ';')
 
 #### LOADING  ADULTS (SPECIES), NYMPHS (GENUS) AND ADULTS (GENUS) DATA ####
-sp_adults = read.csv("./data/Coreidae_Adults.csv", sep = ";") %>% 
+sp_adults = read.csv("./data/18-08-26_Coreidae_Adults.csv", sep = ";") %>% 
   mutate(Species_Name = case_when(
     Species_Name == "Thasus_neocalifornicus" ~ "Pachylis_neocalifornicus",
     Species_Name == "Thasus_sp." ~ 'Pachylis_sp.',
     TRUE ~ Species_Name
   ))
 
-gen_adults = read.csv("./data/Adults_genera.csv", sep = ";") %>% 
+gen_adults = read.csv("./data/18-08-26_Adults_genera.csv", sep = ",") %>% 
   mutate(Species_Name = case_when(
     Species_Name == "Thasus_neocalifornicus" ~ "Pachylis_neocalifornicus",
     Species_Name == "Thasus_sp." ~ 'Pachylis_sp.',
     TRUE ~ Species_Name
   ))
 
-gen_nymphs = read.csv('./data/Nymphs_genera.csv', sep = ';') %>% 
+gen_nymphs = read.csv('./data/18-08-26_Nymphs_genera.csv', sep = ',') %>% 
   mutate(Species_Name = case_when(
     Species_Name == "Thasus_neocalifornicus" ~ "Pachylis_neocalifornicus",
     Species_Name == "Thasus_sp." ~ 'Pachylis_sp.',
@@ -118,11 +118,11 @@ adults.sp.sim
 
 #plot(fit.ER.fitz)
 
-#save(fit.ER.equal, file = './evo.models/er-equal-antenomero.RData')
-#save(fit.ER.fitz, file = './evo.models/er-fitz-antenomero.RData')
+#save(fit.ER.equal, file = './evo.models/er-equal-adults.RData')
+#save(fit.ER.fitz, file = './evo.models/er-fitz-adults.RData')
 
-load( file = './evo.models/er-equal-antenomero.RData')
-load( file = './evo.models/er-fitz-antenomero.RData')
+load( file = './evo.models/er-equal-adults.RData')
+load( file = './evo.models/er-fitz-adults.RData')
 
 plot(fit.ER.equal)
 fit.ER.equal
@@ -138,11 +138,11 @@ fit.ER.fitz
 #fit.ARD.fitz = fitMk(ladderize(t_adults), adults.sp.sim, model = "ARD",
 #                     pi = 'fitzjohn')
 
-#save(fit.ARD.equal, file = './evo.models/ard-equal-antenomero.RData')
-#save(fit.ARD.fitz, file = './evo.models/ard-fitz-antenomero.RData')
+#save(fit.ARD.equal, file = './evo.models/ard-equal-adults.RData')
+#save(fit.ARD.fitz, file = './evo.models/ard-fitz-adults.RData')
 
-load(file = './evo.models/ard-equal-antenomero.RData')
-load(file = './evo.models/ard-fitz-antenomero.RData')
+load(file = './evo.models/ard-equal-adults.RData')
+load(file = './evo.models/ard-fitz-adults.RData')
 
 plot(fit.ARD.equal)
 fit.ARD.equal
@@ -159,11 +159,11 @@ fit.ARD.fitz
 #fitHRM.er.fitz = fitHRM(ladderize(t_adults), adults.sp.sim , model = "ER",
 #                        pi = 'fitzjohn')
 
-#save(fitHRM.er.equal, file = './evo.models/hrm-er-equal-antenomero.RData')
-#save(fitHRM.er.fitz, file = './evo.models/hrm-er-fitz-antenomero.RData')
+#save(fitHRM.er.equal, file = './evo.models/hrm-er-equal-adults.RData')
+#save(fitHRM.er.fitz, file = './evo.models/hrm-er-fitz-adults.RData')
 
-load(file = './evo.models/hrm-er-equal-antenomero.RData')
-load(file = './evo.models/hrm-er-fitz-antenomero.RData')
+load(file = './evo.models/hrm-er-equal-adults.RData')
+load(file = './evo.models/hrm-er-fitz-adults.RData')
 
 plot(fitHRM.er.equal)
 fitHRM.er.equal
@@ -180,12 +180,12 @@ fitHRM.er.fitz
 #fitHRM.fitz = fitHRM(ladderize(t_adults), adults.sp.sim , model = "ARD",
 #                     pi = 'fitzjohn')
 
-#save(fitHRM.equal, file = './evo.models/hrm-equal-antenomero.RData')
-#save(fitHRM.fitz, file = './evo.models/hrm-fitz-antenomero.RData')
+#save(fitHRM.equal, file = './evo.models/hrm-equal-adults.RData')
+#save(fitHRM.fitz, file = './evo.models/hrm-fitz-adults.RData')
 
 
-load(file = './evo.models/hrm-equal-antenomero.RData')
-load(file = './evo.models/hrm-fitz-antenomero.RData')
+load(file = './evo.models/hrm-equal-adults.RData')
+load(file = './evo.models/hrm-fitz-adults.RData')
 
 
 plot(fitHRM.equal)
@@ -214,7 +214,10 @@ cols = setNames(c("#0E3768","#94129F", "#de627a", "#ce4326"),
                levels(adults.sp.sim))
 
 
-pdf(file = './figures/ancestral-tree-adults-species.pdf', h = 24, w = 20)
+### Uncomment the pdf()/dev.off() pair (and create a figures/ folder) to write
+### this figure to a file instead of plotting it to the screen.
+
+#pdf(file = './figures/ancestral-tree-adults-species.pdf', h = 24, w = 20)
 plot(anc.ant,  
      args.plotTree = list(lwd = 3, fsize = 1, 
                           ftype = 'i',
@@ -225,17 +228,25 @@ plot(anc.ant,
      args.tiplabels = list(cex = 0.3)
      
 )
-dev.off()
+#dev.off()
 
 # simulation mapping
 
-ard_sim = make.simmap( tree = ladderize(t_adults), x= adults.sp.sim , model = "ER", pi = 'fitzjohn',
-                     nsim = 1000)
+### The stochastic mapping takes a long time and is not deterministic. The
+### 1000 simulations used in the paper are stored in ant_sim.RData, so the
+### function is commented out and the saved object is loaded instead.
 
-sum_sim = describe.simmap(ard_sim)
+#ant_sim = make.simmap( tree = ladderize(t_adults), x= adults.sp.sim , model = "ER", pi = 'fitzjohn',
+#                     nsim = 1000)
+
+#save(ant_sim, file = './evo.models/ant_sim.RData')
+
+load(file = './evo.models/ant_sim.RData')
+
+sum_sim = describe.simmap(ant_sim)
 sum_sim
 
-plot(density(ard_sim))
+plot(density(ant_sim))
 
 
 #### NYMPHS AND ADULTS GENNERA ANALYSIS ####
@@ -285,8 +296,8 @@ fit.ER.fitz.nymph
 
 plot(fit.ER.equal.nymph)
 
-save(fit.ER.equal.nymph, file = './evo.models/er-equal-nymph.RData')
-save(fit.ER.fitz.nymph, file = './evo.models/er-fitz-nymph.RData')
+#save(fit.ER.equal.nymph, file = './evo.models/er-equal-nymph.RData')
+#save(fit.ER.fitz.nymph, file = './evo.models/er-fitz-nymph.RData')
 
 load( file = './evo.models/er-equal-nymph.RData')
 load( file = './evo.models/er-fitz-nymph.RData')
@@ -297,8 +308,8 @@ load( file = './evo.models/er-fitz-nymph.RData')
 #fit.ARD.fitz.nymph = fitMk(ladderize(t_nymphs), nymphs.gen.sim, model = "ARD",
 #                           pi = 'fitzjohn')
 
-save(fit.ARD.equal.nymph, file = './evo.models/ARD-equal-nymph.RData')
-save(fit.ARD.fitz.nymph, file = './evo.models//ARD-fitz-nymph.RData')
+#save(fit.ARD.equal.nymph, file = './evo.models/ARD-equal-nymph.RData')
+#save(fit.ARD.fitz.nymph, file = './evo.models/ARD-fitz-nymph.RData')
 
 load( file = './evo.models/ARD-equal-nymph.RData')
 load( file = './evo.models/ARD-fitz-nymph.RData')
@@ -311,8 +322,8 @@ load( file = './evo.models/ARD-fitz-nymph.RData')
 #fitHRM.er.fitz.nymph = fitHRM(ladderize(t_nymphs), nymphs.gen.sim , model = "ER",
 #                              pi = 'fitzjohn')
 
-save(fitHRM.er.equal.nymph, file = './evo.models/hrm-er-equal-nymph.RData')
-save(fitHRM.er.fitz.nymph, file = './evo.models/hrm-er-fitz-nymph.RData')
+#save(fitHRM.er.equal.nymph, file = './evo.models/hrm-er-equal-nymph.RData')
+#save(fitHRM.er.fitz.nymph, file = './evo.models/hrm-er-fitz-nymph.RData')
 
 load(file = './evo.models/hrm-er-equal-nymph.RData')
 load(file = './evo.models/hrm-er-fitz-nymph.RData')
@@ -324,8 +335,8 @@ load(file = './evo.models/hrm-er-fitz-nymph.RData')
 #fitHRM.ard.fitz.nymph = fitHRM(ladderize(t_nymphs), nymphs.gen.sim , model = "ARD",
 #                         pi = 'fitzjohn')
 
-save(fitHRM.ard.equal.nymph, file = './evo.models/hrm-equal-nymph.RData')
-save(fitHRM.ard.fitz.nymph, file = './evo.models/hrm-fitz-nymph.RData')
+#save(fitHRM.ard.equal.nymph, file = './evo.models/hrm-equal-nymph.RData')
+#save(fitHRM.ard.fitz.nymph, file = './evo.models/hrm-fitz-nymph.RData')
 
 
 load(file = './evo.models/hrm-equal-nymph.RData')
@@ -349,7 +360,7 @@ cols = setNames(c("#0E3768", "#DE627A", "green", "brown"),
                 levels(nymphs.gen.sim))
 
 
-pdf(file = './ancestral-nymph.pdf', h = 40, w = 20)
+#pdf(file = './ancestral-nymph.pdf', h = 40, w = 20)
 plot(anc.nymph,  
      args.plotTree = list(lwd = 3, fsize = 1, 
                           ftype = 'i',
@@ -360,17 +371,19 @@ plot(anc.nymph,
      args.tiplabels = list(cex = 0.3)
      
 )
-dev.off()
+#dev.off()
 
 # simulation mapping
 
-ard_sim_nymph = make.simmap( tree = ladderize(t_nymphs), x= nymphs.gen.sim , model = "ER", pi = 'fitzjohn',
-                             nsim = 1000)
+#ard_sim_nymph = make.simmap( tree = ladderize(t_nymphs), x= nymphs.gen.sim , model = "ER", pi = 'fitzjohn',
+#                             nsim = 1000)
+
+#save(ard_sim_nymph, file = './evo.models/ard_sim_nymph.RData')
+
+load( file = './evo.models/ard_sim_nymph.RData')
 
 sum_sim_nymph = describe.simmap(ard_sim_nymph)
 sum_sim_nymph
-
-dev.off()
 
 plot(density(ard_sim_nymph))
 
@@ -427,8 +440,8 @@ fit.ER.fitz.ag
 
 plot(fit.ER.equal.ag)
 
-save(fit.ER.equal.ag, file = './evo.models/er-equal-adults-genus.RData')
-save(fit.ER.fitz.ag, file = './evo.models/er-fitz-adults-genus.RData')
+#save(fit.ER.equal.ag, file = './evo.models/er-equal-adults-genus.RData')
+#save(fit.ER.fitz.ag, file = './evo.models/er-fitz-adults-genus.RData')
 
 load( file = './evo.models/er-equal-adults-genus.RData')
 load( file = './evo.models/er-fitz-adults-genus.RData')
@@ -442,8 +455,8 @@ load( file = './evo.models/er-fitz-adults-genus.RData')
 fit.ARD.equal.ag
 fit.ARD.fitz.ag
 
-save(fit.ARD.equal.ag, file = './evo.models/ARD-equal-adults-genus.RData')
-save(fit.ARD.fitz.ag, file = './evo.models/ARD-fitz-adults-genus.RData')
+#save(fit.ARD.equal.ag, file = './evo.models/ARD-equal-adults-genus.RData')
+#save(fit.ARD.fitz.ag, file = './evo.models/ARD-fitz-adults-genus.RData')
 
 load( file = './evo.models/ARD-equal-adults-genus.RData')
 load( file = './evo.models/ARD-fitz-adults-genus.RData')
@@ -456,8 +469,8 @@ load( file = './evo.models/ARD-fitz-adults-genus.RData')
 #fitHRM.er.fitz.ag = fitHRM(ladderize(t_adults_gen), adults.gen.sim, model = "ER",
 #                          pi = 'fitzjohn')
 
-save(fitHRM.er.equal.ag, file = './evo.models/hrm-er-equal-adults-genus.RData')
-save(fitHRM.er.fitz.ag, file = './evo.models/hrm-er-fitz-adults-genus.RData')
+#save(fitHRM.er.equal.ag, file = './evo.models/hrm-er-equal-adults-genus.RData')
+#save(fitHRM.er.fitz.ag, file = './evo.models/hrm-er-fitz-adults-genus.RData')
 
 load(file = './evo.models/hrm-er-equal-adults-genus.RData')
 load(file = './evo.models/hrm-er-fitz-adults-genus.RData')
@@ -475,8 +488,8 @@ fitHRM.er.fitz.ag
 #fitHRM.ard.fitz.ag = fitHRM(ladderize(t_adults_gen), adults.gen.sim, model = "ARD",
 #                           pi = 'fitzjohn')
 
-save(fitHRM.ard.equal.ag, file = './evo.models/hrm-equal-adults-genus.RData')
-save(fitHRM.ard.fitz.ag, file = './evo.models/hrm-fitz-adults-genus.RData')
+#save(fitHRM.ard.equal.ag, file = './evo.models/hrm-equal-adults-genus.RData')
+#save(fitHRM.ard.fitz.ag, file = './evo.models/hrm-fitz-adults-genus.RData')
 
 
 load(file = './evo.models/hrm-equal-adults-genus.RData')
@@ -537,10 +550,10 @@ rownames(tip.pies) = anc.nymph$tree$tip.label
 colnames(tip.pies) = states2
 
 getwd()
-png(file = './figures/ancestral-facing.png', height = 400, width = 350,
-    units = "mm", res = 300)
-pdf(file = './figures/antennnomere_facing.pdf',
-    h = 12, w = 12)
+#png(file = './figures/ancestral-facing.png', height = 400, width = 350,
+#    units = "mm", res = 300)
+#pdf(file = './figures/antennnomere_facing.pdf',
+#    h = 12, w = 12)
 
 layout(matrix(1:3, nrow = 1), widths = c(0.44, 0.12, 0.44))
 
@@ -608,4 +621,4 @@ plot(
   )
 )
 mtext("adults", side = 3, line = 1, adj = 1)
-dev.off()
+#dev.off()

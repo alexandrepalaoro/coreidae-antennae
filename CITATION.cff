@@ -32,6 +32,11 @@ keywords:
   - "ontogeny"
   - "exaggerated traits"
   - "hidden rates model"
+doi: "10.5281/zenodo.22758792"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22758792"
+    description: "Concept DOI — always resolves to the newest archived version"
 preferred-citation:
   type: article
   authors:
