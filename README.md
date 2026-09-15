@@ -1,6 +1,6 @@
 # Developmental and Phylogenetic Patterns of Antennal Expansion in Leaf-Footed Bugs (Hemiptera: Coreidae)
 
-_Data and R code for the comparative study of antennal expansion in leaf-footed bugs, scored across adults and nymphs and reconstructed over a recent Coreidae phylogeny._
+_Data and R code for the comparative study of antennal expansion in leaf-footed bugs, scored across adults and nymphs and reconstructed over a recent Coreidae phylogeny_
 
 Authors: Mariana Polli, Ummat Somjee & Alexandre V. Palaoro <br>
 Contact about code and analyses: marianapolli12@gmail.com or alexandre.palaoro@gmail.com
@@ -30,7 +30,7 @@ We also have four files that are not inside any folder:
 
 - `Coreidae_Adults.csv` — contains the classification of each antennomere and links to the images we used to categorize antennal morphology in adults. Also has links to primary taxonomic descriptions in a few instances.
 - `Coreidae_Nymphs_Full.csv` — contains the classification of each antennomere and links to the images we used to categorize antennomere morphology in nymphs. This is the full file; we collapsed it into genus for the analyses.
-- `antennae-evol.Rmd` — the RMarkdown source of the report: the analyses as they were actually run, with the prose that explains each step.
+- `antennae-evol.Rmd` — the RMarkdown source of the report: the analyses as they were actually run, with comments that explains each step.
 - `antennae-evol.html` — the knitted report produced from `antennae-evol.Rmd`.
 
 ##### Code:
@@ -40,8 +40,7 @@ There are two equivalent entry points: `antennae-evol.Rmd`, which knits the full
 same stored model fits, and both use paths relative to the repository root — open
 `coreidae-antennae` as the working directory (or as an RStudio project) and everything resolves.
 
-The pipeline reads the phylogeny and the scored antennal data, roots the tree following Forthman et al. (2024), prunes it to the taxa with data, and fits
-equal-rates (ER), all-rates-different (ARD) and hidden-rates (HRM) Mk models under both equal and
+The pipeline reads the phylogeny and the scored antennal data, roots the tree following Forthman et al. (2024), prunes it to the taxa with data, and fits equal-rates (ER), all-rates-different (ARD) and hidden-rates (HRM) Mk models under both equal and
 FitzJohn root priors — separately for adults at species level, adults at genus level, and nymphs at
 genus level. Model fits are stored in `evo.models/` so the script can be re-run without waiting for
 every optimisation, and the final blocks build the stochastic-character maps and the paired
@@ -66,7 +65,7 @@ Twelfth column - State of antennomere III (varying from 0 to 2); <br>
 Thirteenth column - Sum of antennomeres (varying 0 to 6); <br>
 Fourteenth column - Reference of images or papers used to classify the species' antennae. <br>
 
-The main difference is that in the uncertain and full datasets, antennae can also be classified as "No_data". <br>
+The main difference is that in the full datasets, antennae can also be classified as "No_data". <br>
 
 The CSV files use **semicolon** as the field separator (`sep = ";"`), not comma.
 
@@ -126,18 +125,6 @@ In short: do whatever you like with the data, no permission needed and no attrib
 legally required; reuse the code freely as long as you keep the copyright notice. Academic
 norms still apply — if the data or code are useful to you, cite the paper.
 
-## Updating the archive
-
-This repository is linked to Zenodo. Every new GitHub release is archived automatically and
-gets its own version DOI, while the concept DOI above always resolves to the newest version —
-so the DOI in this README and in `CITATION.cff` never needs changing again.
-
-To publish an update: **Releases → Draft a new release**, bump the tag (`v1.1.0`), publish.
-Zenodo picks it up within a minute or two. `.zenodo.json` supplies the title, authors, ORCIDs,
-keywords and the link to the preprint, so there is nothing to retype in the Zenodo form.
-
-Cite the concept DOI in papers, never a version DOI.
-
 ## Reproducibility
 
 - Everything needed to reproduce the analyses is in this repository: the scored data, the
@@ -149,7 +136,7 @@ Cite the concept DOI in papers, never a version DOI.
   the 1000 simulations behind the published figures. The `make.simmap()` calls that generated them
   are kept in the code but commented out, since re-running them is slow and gives a different
   draw each time; uncomment them if you want a fresh set.
-- Likewise, the `save()` calls that wrote the files in `evo.models/` are commented out, so running
+- Likewise, the `save()` calls that wrote the files in `evo.models/` are commented, so running
   the code cannot overwrite the archived fits.
 - Figures are plotted to the screen. To write them to file instead, uncomment the `pdf()`/`png()`
   and matching `dev.off()` lines and create a `figures/` folder first.
