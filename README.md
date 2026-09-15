@@ -5,14 +5,14 @@ _Data and R code for the comparative study of antennal expansion in leaf-footed 
 Authors: Mariana Polli, Ummat Somjee & Alexandre V. Palaoro <br>
 Contact about code and analyses: marianapolli12@gmail.com or alexandre.palaoro@gmail.com
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22758792.svg)](https://doi.org/10.5281/zenodo.22758792)
 [![preprint](https://img.shields.io/badge/preprint-10.32942%2FX21X1M-blue)](https://doi.org/10.32942/X21X1M)
 [![code license](https://img.shields.io/badge/code%20license-MIT-green)](LICENSE)
 [![data license](https://img.shields.io/badge/data%20license-CC0%201.0-brightgreen)](LICENSE-DATA)
 
 > [!NOTE]
-> This work is a preprint under peer review. The repository is linked to Zenodo but has not been
-> released yet — the archive DOI badge and the archive citation will be added here once the first
-> release is published.
+> This work is a preprint under peer review. This README will be updated with the journal
+> reference once the paper is published.
 
 ---
 
@@ -26,16 +26,21 @@ The <i>"data"</i> folder contains all the data required to run our analyses, in 
 The <i>"evo.models"</i> folder contains saved evolutionary analyses. We saved them in different ".RData" files because some of them might take >5 minutes to run. Each file is a different analysis and they are called at different times in the code. <br>
 The <i>"phylo"</i> folder contains the phylogeny we used in the paper. <br>
 
-We also have three files that are not inside any folder:
+We also have four files that are not inside any folder:
 
 - `Coreidae_Adults.csv` — contains the classification of each antennomere and links to the images we used to categorize antennal morphology in adults. Also has links to primary taxonomic descriptions in a few instances.
 - `Coreidae_Nymphs_Full.csv` — contains the classification of each antennomere and links to the images we used to categorize antennomere morphology in nymphs. This is the full file; we collapsed it into genus for the analyses.
-- `antennae-evol.html` — the knitted RMarkdown report with all the analyses performed.
+- `antennae-evol.Rmd` — the RMarkdown source of the report: the analyses as they were actually run, with the prose that explains each step.
+- `antennae-evol.html` — the knitted report produced from `antennae-evol.Rmd`.
 
 ##### Code:
 
-`code/coreid-analyses.R` runs the whole pipeline: it reads the phylogeny and the scored antennal
-data, roots the tree following Forthman et al. (2024), prunes it to the taxa with data, and fits
+There are two equivalent entry points: `antennae-evol.Rmd`, which knits the full report, and
+`code/coreid-analyses.R`, the same analysis as a plain script. Both read the same data and load the
+same stored model fits, and both use paths relative to the repository root — open
+`coreidae-antennae` as the working directory (or as an RStudio project) and everything resolves.
+
+The pipeline reads the phylogeny and the scored antennal data, roots the tree following Forthman et al. (2024), prunes it to the taxa with data, and fits
 equal-rates (ER), all-rates-different (ARD) and hidden-rates (HRM) Mk models under both equal and
 FitzJohn root priors — separately for adults at species level, adults at genus level, and nymphs at
 genus level. Model fits are stored in `evo.models/` so the script can be re-run without waiting for
@@ -100,6 +105,10 @@ If you use anything in this repository, please cite the paper:
 
 This is a preprint under peer review — please check for a journal version before citing.
 
+If you reuse the code or the archived files directly, please also cite the archive:
+
+> Polli, M., Somjee, U. & Palaoro, A.V. (2026) *Code and data for: Developmental and Phylogenetic Patterns of Antennal Expansion in Leaf-Footed Bugs (Hemiptera: Coreidae)* [Data set]. Zenodo. https://doi.org/10.5281/zenodo.22758792
+
 `CITATION.cff` in this repository holds the citation in machine-readable form — GitHub's
 **Cite this repository** button (top right of the repository page) will generate APA or
 BibTeX from it for you.
@@ -120,13 +129,12 @@ norms still apply — if the data or code are useful to you, cite the paper.
 ## Updating the archive
 
 This repository is linked to Zenodo. Every new GitHub release is archived automatically and
-gets its own version DOI, while the concept DOI always resolves to the newest version — so once
-the first release is made, the DOI written here and in `CITATION.cff` never needs changing again.
+gets its own version DOI, while the concept DOI above always resolves to the newest version —
+so the DOI in this README and in `CITATION.cff` never needs changing again.
 
-To publish a release: **Releases → Draft a new release**, create a tag (`v1.0.0` for the first
-one), publish. Zenodo picks it up within a minute or two. `.zenodo.json` supplies the title,
-authors, ORCIDs, keywords and the link to the preprint, so there is nothing to retype in the
-Zenodo form.
+To publish an update: **Releases → Draft a new release**, bump the tag (`v1.1.0`), publish.
+Zenodo picks it up within a minute or two. `.zenodo.json` supplies the title, authors, ORCIDs,
+keywords and the link to the preprint, so there is nothing to retype in the Zenodo form.
 
 Cite the concept DOI in papers, never a version DOI.
 
@@ -137,3 +145,11 @@ Cite the concept DOI in papers, never a version DOI.
 - The archived release on Zenodo is the version of record. GitHub history may move on; the
   DOI will not.
 - Package versions used are listed above. If a result does not reproduce, check those first.
+- The stochastic character maps (`evo.models/ant_sim.RData`, `evo.models/ard_sim_nymph.RData`) are
+  the 1000 simulations behind the published figures. The `make.simmap()` calls that generated them
+  are kept in the code but commented out, since re-running them is slow and gives a different
+  draw each time; uncomment them if you want a fresh set.
+- Likewise, the `save()` calls that wrote the files in `evo.models/` are commented out, so running
+  the code cannot overwrite the archived fits.
+- Figures are plotted to the screen. To write them to file instead, uncomment the `pdf()`/`png()`
+  and matching `dev.off()` lines and create a `figures/` folder first.
