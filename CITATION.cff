@@ -1,7 +1,7 @@
 cff-version: 1.2.0
-message: "If you use these data or this code, please cite both the preprint (preferred-citation) and this repository."
+message: "If you use these data or this code, please cite both the article (preferred-citation) and this repository."
 type: software
-title: "Code and data for: Developmental and Phylogenetic Patterns of Antennal Expansion in Leaf-Footed Bugs (Hemiptera: Coreidae)"
+title: "Code and data for: Evolutionary history suggests nymphal origin of antennal expansions in adult leaf-footed bugs"
 abstract: "Data and R code for the comparative study of antennal expansion in leaf-footed bugs (Hemiptera: Coreidae). Contains the antennomere-by-antennomere scoring of antennal morphology for adults (species level) and nymphs (genus level), built from research-grade iNaturalist photographs and primary taxonomic descriptions, together with the phylogeny used, the stored Mk and hidden-rates model fits, and the R script that reproduces every ancestral-state reconstruction and figure."
 authors:
   - family-names: Polli
@@ -11,6 +11,7 @@ authors:
   - family-names: Somjee
     given-names: Ummat
     orcid: "https://orcid.org/0000-0002-5130-3605"
+    affiliation: "Smithsonian Tropical Research Institute, Panamá, Republic of Panama"
   - family-names: Palaoro
     given-names: Alexandre V.
     orcid: "https://orcid.org/0000-0002-8629-0728"
@@ -30,13 +31,12 @@ keywords:
   - "morphological diversity"
   - "nymph"
   - "ontogeny"
-  - "exaggerated traits"
   - "hidden rates model"
 doi: "10.5281/zenodo.22758792"
 identifiers:
   - type: doi
     value: "10.5281/zenodo.22758792"
-    description: "Concept DOI — always resolves to the newest archived version"
+    description: "Concept DOI. It always resolves to the newest archived version."
 preferred-citation:
   type: article
   authors:
@@ -47,13 +47,31 @@ preferred-citation:
     - family-names: Somjee
       given-names: Ummat
       orcid: "https://orcid.org/0000-0002-5130-3605"
+      affiliation: "Smithsonian Tropical Research Institute, Panamá, Republic of Panama"
     - family-names: Palaoro
       given-names: Alexandre V.
       orcid: "https://orcid.org/0000-0002-8629-0728"
       affiliation: "Universidade Federal do Paraná, Curitiba, Brazil"
-  title: "Developmental and Phylogenetic Patterns of Antennal Expansion in Leaf-Footed Bugs (Hemiptera: Coreidae)"
-  journal: "EcoEvoRxiv"
+  title: "Evolutionary history suggests nymphal origin of antennal expansions in adult leaf-footed bugs"
+  journal: "Ecological Entomology"
   year: 2026
-  doi: "10.32942/X21X1M"
-  url: "https://doi.org/10.32942/X21X1M"
-  notes: "Preprint; not yet peer reviewed. Update this entry when the journal version appears."
+  status: advance-online
+  doi: "10.1111/een.70159"
+  url: "https://doi.org/10.1111/een.70159"
+references:
+  - type: article
+    authors:
+      - family-names: Forthman
+        given-names: "M."
+      - family-names: Phan
+        given-names: "H."
+      - family-names: Miller
+        given-names: "C. W."
+      - family-names: Kimball
+        given-names: "R. T."
+    title: "Phylogenetic placement of the leaf-footed bug tribes Agriopocorini, Amorbini, and Manocoreini (Heteroptera: Coreidae) using ultraconserved elements"
+    journal: "Zoological Journal of the Linnean Society"
+    volume: 202
+    issue: 3
+    year: 2024
+    doi: "10.1093/zoolinnean/zlae024"

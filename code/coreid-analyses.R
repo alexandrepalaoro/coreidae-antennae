@@ -4,6 +4,9 @@ library(geiger)
 library(diversitree)
 library(tidyverse)
 
+# All paths are relative to the project root. Open antennae-evol.Rproj (or set
+# the working directory to the project folder) before running this script.
+
 #### LOADING PHYLOGENY AND DATA FILE ####
 
 tt = read.tree(file = './phylo/50p.treefile')
@@ -11,21 +14,23 @@ tt = read.tree(file = './phylo/50p.treefile')
 tips = read.csv(file = './data/25-10-25_antena_coreidae_summarised_2.csv', h =T, sep = ';')
 
 #### LOADING  ADULTS (SPECIES), NYMPHS (GENUS) AND ADULTS (GENUS) DATA ####
-sp_adults = read.csv("./data/18-08-26_Coreidae_Adults.csv", sep = ";") %>% 
+sp_adults = read.csv("./data/18-08-26_Coreidae_Adults.csv", sep = ";") %>%
   mutate(Species_Name = case_when(
     Species_Name == "Thasus_neocalifornicus" ~ "Pachylis_neocalifornicus",
     Species_Name == "Thasus_sp." ~ 'Pachylis_sp.',
     TRUE ~ Species_Name
   ))
 
-gen_adults = read.csv("./data/18-08-26_Adults_genera.csv", sep = ",") %>% 
+# The two genera files use commas as separators, not semicolons.
+
+gen_adults = read.csv("./data/18-08-26_Adults_genera.csv", sep = ",") %>%
   mutate(Species_Name = case_when(
     Species_Name == "Thasus_neocalifornicus" ~ "Pachylis_neocalifornicus",
     Species_Name == "Thasus_sp." ~ 'Pachylis_sp.',
     TRUE ~ Species_Name
   ))
 
-gen_nymphs = read.csv('./data/18-08-26_Nymphs_genera.csv', sep = ',') %>% 
+gen_nymphs = read.csv('./data/18-08-26_Nymphs_genera.csv', sep = ',') %>%
   mutate(Species_Name = case_when(
     Species_Name == "Thasus_neocalifornicus" ~ "Pachylis_neocalifornicus",
     Species_Name == "Thasus_sp." ~ 'Pachylis_sp.',
@@ -33,6 +38,9 @@ gen_nymphs = read.csv('./data/18-08-26_Nymphs_genera.csv', sep = ',') %>%
   ))
 
 #### HANDLING THE NAMES ON THE TIPS OF THE TREE AND ON OUR DATA FILE ####
+
+# The rows of the summarised file are in the same order as the tips of the
+# tree, so we can swap the tip labels for the species names directly.
 
 rownames(tips) = tips$Species_Name
 
@@ -42,10 +50,10 @@ name.check(tt, tips)
 
 #### ROOTING THE TREE ####
 
-#### TO GET A RESULT CLOSER TO WHAT WAS PRESENTED IN THE PAPER, 
-#### AND TO BE ABLE TO DATE THE TREE, IT FIRST NEEDS A ROOT 
-#### FOLLOWING THE INFORMATION ON FORTHMANN ET AL. (2024), 
-#### JADERA IS THE ROOT. SO, LET'S ROOT IT.
+#### TO GET A RESULT CLOSER TO WHAT WAS PRESENTED IN FORTHMAN ET AL. (2024),
+#### THE TREE FIRST NEEDS A ROOT. IN THAT PAPER, JADERA IS THE ROOT, SO WE
+#### ROOT THE TREE ON NODE 308, THE RHOPALIDAE CLADE FORMED BY
+#### JADERA HAEMATOLOMA AND HARMOSTES SERRATUS.
 
 t1 = root(tt, node = 308, resolve.root = T)
 
@@ -57,13 +65,13 @@ plot.phylo(t1)
 #### REMOVING ZEROES FROM DATASET AND DROPPING UNNECESSARY TIPS ####
 
 # Since our goal is analyzing trait evolution in Coreidae,
-# we removed the non-Coreidae species in the tree.
+# we removed the outgroup species in the tree.
 
-# We also removed tips with no data or at species level,
-# labeled as "0"
+# We also removed tips with no data, coded as "0" in the
+# Antennae column.
 
-adults_data = sp_adults %>% 
-  filter(Antennae != 0, 
+adults_data = sp_adults %>%
+  filter(Antennae != 0,
          !Species_Name %in% c("Jadera_haematoloma", "Harmostes_serratus",
                               "Oedancala_sp.", "Oncopeltus_fasciatus",
                               "Largus_sp.", "Dysdercus_mimus",
@@ -74,9 +82,9 @@ adults_data = sp_adults %>%
 
 t_adults = keep.tip(t1, adults_data$Species_Name)
 
-name.check(t_adults, adults_data)
+name.check(t_adults, adults_data, data.names = adults_data$Species_Name)
 
-#### THE MK MODEL: ASSESSING CHANGES IN ANTENNOMMERE ####
+#### THE MK MODEL: ASSESSING CHANGES IN ANTENNOMERE ####
 #### TRAIT STATE ON ADULTS SPECIES ####
 
 # Before running the analyses, we need to create a matrix so phytools
@@ -89,126 +97,124 @@ adults.sp.sim
 
 # With the matrix done, we can now move to the analyses.
 
-# We are using the fitMk function. The function requires us to specify 
+# We are using the fitMk function. The function requires us to specify
 # the tree we are going to use, the data in matrix format, the evolutionary
 # model, and, if we wish, the state of the root.
-# We opted to calculate the transitions for the tree calibrated with the 
-# correlated model in chronos() because it is most comonnly used model.
 
-# We are fitting two types of evolutionary models: Equal rates and All rates differ.
-# We are not using the symmetrical because we only have two trait states. 
-# When that happens, the symmetrical evolutionary model is equal to the all rates differ
-# model.
+# We are fitting two types of evolutionary models: Equal rates (ER) and
+# All rates differ (ARD). We fit each of them with and without hidden
+# rates (HRM).
 
-# Lastly, we are using two types of root estimation. One where both states have
+# Lastly, we are using two types of root estimation. One where all states have
 # equal probabilities, and another where probabilities are calculated based on the
 # data (fitzjohn). We used both because we have no a priori hypothesis of the
 # ancestral state.
 
 ### NOTE: ONCE AGAIN I AM COMMENTING THE FUNCTION SO YOU DO NOT MISTAKENLY
-### RUN IT. IF YOU WANT TO RUN IT, JUST UNCOMMENT THE FUNCTIONS. 
+### RUN IT. IF YOU WANT TO RUN IT, JUST UNCOMMENT THE FUNCTIONS.
 ### OTHERWISE, LOAD THEM AND CARRY ON WITH THE ANALYSES.
 
-#fit.ER.equal = fitMk(ladderize(t_adults), adults.sp.sim , model = "ER",
-#                     pi = 'equal')
+#fit.ER.equal.ant = fitMk(ladderize(t_adults), adults.sp.sim , model = "ER",
+#                         pi = 'equal')
 
 
-#fit.ER.fitz = fitMk(ladderize(t_adults), adults.sp.sim , model = "ER",
-#                    pi = 'fitzjohn')
+#fit.ER.fitz.ant = fitMk(ladderize(t_adults), adults.sp.sim , model = "ER",
+#                        pi = 'fitzjohn')
 
-#plot(fit.ER.fitz)
-
-#save(fit.ER.equal, file = './evo.models/er-equal-adults.RData')
-#save(fit.ER.fitz, file = './evo.models/er-fitz-adults.RData')
+#save(fit.ER.equal.ant, file = './evo.models/er-equal-adults.RData')
+#save(fit.ER.fitz.ant, file = './evo.models/er-fitz-adults.RData')
 
 load( file = './evo.models/er-equal-adults.RData')
 load( file = './evo.models/er-fitz-adults.RData')
 
-plot(fit.ER.equal)
-fit.ER.equal
+plot(fit.ER.equal.ant)
+fit.ER.equal.ant
 
-plot(fit.ER.fitz)
-fit.ER.fitz
+plot(fit.ER.fitz.ant)
+fit.ER.fitz.ant
 
 # All rates differ model #
 
-#fit.ARD.equal = fitMk(ladderize(t_adults), adults.sp.sim., model = "ARD",
-#                      pi = 'equal')
+#fit.ARD.equal.ant = fitMk(ladderize(t_adults), adults.sp.sim, model = "ARD",
+#                          pi = 'equal')
 
-#fit.ARD.fitz = fitMk(ladderize(t_adults), adults.sp.sim, model = "ARD",
-#                     pi = 'fitzjohn')
+#fit.ARD.fitz.ant = fitMk(ladderize(t_adults), adults.sp.sim, model = "ARD",
+#                         pi = 'fitzjohn')
 
-#save(fit.ARD.equal, file = './evo.models/ard-equal-adults.RData')
-#save(fit.ARD.fitz, file = './evo.models/ard-fitz-adults.RData')
+#save(fit.ARD.equal.ant, file = './evo.models/ard-equal-adults.RData')
+#save(fit.ARD.fitz.ant, file = './evo.models/ard-fitz-adults.RData')
 
 load(file = './evo.models/ard-equal-adults.RData')
 load(file = './evo.models/ard-fitz-adults.RData')
 
-plot(fit.ARD.equal)
-fit.ARD.equal
+plot(fit.ARD.equal.ant)
+fit.ARD.equal.ant
 
-plot(fit.ARD.fitz)
-fit.ARD.fitz
+plot(fit.ARD.fitz.ant)
+fit.ARD.fitz.ant
 
 # We are also using the HRM models for thoroughness. Maybe there is an
-# underlying mechanism for changing antennal state we are not capturing. 
+# underlying mechanism for changing antennal state we are not capturing.
 
-#fitHRM.er.equal = fitHRM(ladderize(t_adults), adults.sp.sim , model = "ER",
-#                         pi = 'equal')
+#fitHRM.er.equal.ant = fitHRM(ladderize(t_adults), adults.sp.sim , model = "ER",
+#                             pi = 'equal')
 
-#fitHRM.er.fitz = fitHRM(ladderize(t_adults), adults.sp.sim , model = "ER",
-#                        pi = 'fitzjohn')
+#fitHRM.er.fitz.ant = fitHRM(ladderize(t_adults), adults.sp.sim , model = "ER",
+#                            pi = 'fitzjohn')
 
-#save(fitHRM.er.equal, file = './evo.models/hrm-er-equal-adults.RData')
-#save(fitHRM.er.fitz, file = './evo.models/hrm-er-fitz-adults.RData')
+#save(fitHRM.er.equal.ant, file = './evo.models/hrm-er-equal-adults.RData')
+#save(fitHRM.er.fitz.ant, file = './evo.models/hrm-er-fitz-adults.RData')
 
 load(file = './evo.models/hrm-er-equal-adults.RData')
 load(file = './evo.models/hrm-er-fitz-adults.RData')
 
-plot(fitHRM.er.equal)
-fitHRM.er.equal
+plot(fitHRM.er.equal.ant)
+fitHRM.er.equal.ant
 
-plot(fitHRM.er.fitz)
-fitHRM.er.fitz
+plot(fitHRM.er.fitz.ant)
+fitHRM.er.fitz.ant
 
 # All rates differ HRM #
 
-#fitHRM.equal = fitHRM(ladderize(t_adults), adults.sp.sim , model = "ARD",
-#                      pi = 'equal')
+#fitHRM.equal.ant = fitHRM(ladderize(t_adults), adults.sp.sim , model = "ARD",
+#                          pi = 'equal')
 
 
-#fitHRM.fitz = fitHRM(ladderize(t_adults), adults.sp.sim , model = "ARD",
-#                     pi = 'fitzjohn')
+#fitHRM.fitz.ant = fitHRM(ladderize(t_adults), adults.sp.sim , model = "ARD",
+#                         pi = 'fitzjohn')
 
-#save(fitHRM.equal, file = './evo.models/hrm-equal-adults.RData')
-#save(fitHRM.fitz, file = './evo.models/hrm-fitz-adults.RData')
+#save(fitHRM.equal.ant, file = './evo.models/hrm-equal-adults.RData')
+#save(fitHRM.fitz.ant, file = './evo.models/hrm-fitz-adults.RData')
 
 
 load(file = './evo.models/hrm-equal-adults.RData')
 load(file = './evo.models/hrm-fitz-adults.RData')
 
 
-plot(fitHRM.equal)
-fitHRM.equal
+plot(fitHRM.equal.ant)
+fitHRM.equal.ant
 
-plot(fitHRM.fitz)
-fitHRM.fitz
+plot(fitHRM.fitz.ant)
+fitHRM.fitz.ant
 
-# Now we compare the models using AIC. 
+# Now we compare the models using AIC.
 # We chose the model with the lowest AIC as the best model.
 # If models had similar AICs, we chose the one with the lowest
 # degrees of freedom. In the case, below, the ER model was the best.
-# Between the two root states, we used the fitjohn approach because it 
+# Between the two root states, we used the fitzjohn approach because it
 # had more AIC weight when compared to the equal ER model.
 
-fit_models = anova(fit.ER.equal, fit.ARD.equal,
-                    fitHRM.er.equal, fitHRM.equal,
-                    fit.ER.fitz, fit.ARD.fitz,
-                    fitHRM.er.fitz, fitHRM.fitz)
-  
-anc.ARD = ancr(fit.ER.fitz)
+fit_models = anova(fit.ER.equal.ant, fit.ARD.equal.ant,
+                    fitHRM.er.equal.ant, fitHRM.equal.ant,
+                    fit.ER.fitz.ant, fit.ARD.fitz.ant,
+                    fitHRM.er.fitz.ant, fitHRM.fitz.ant)
 
-fit.ER.fitz
+# We chose the ER fitzjohn model: it had the lowest AIC and
+# only one parameter (d.f. = 1)
+
+anc.ant = ancr(fit.ER.fitz.ant)
+
+fit.ER.fitz.ant
 
 cols = setNames(c("#0E3768","#94129F", "#de627a", "#ce4326"),
                levels(adults.sp.sim))
@@ -218,15 +224,15 @@ cols = setNames(c("#0E3768","#94129F", "#de627a", "#ce4326"),
 ### this figure to a file instead of plotting it to the screen.
 
 #pdf(file = './figures/ancestral-tree-adults-species.pdf', h = 24, w = 20)
-plot(anc.ant,  
-     args.plotTree = list(lwd = 3, fsize = 1, 
+plot(anc.ant,
+     args.plotTree = list(lwd = 3, fsize = 1,
                           ftype = 'i',
                           outline = T,
                           cex = 0.2, offset = 1
      ),
      args.nodelabels = list(cex = 0.3, piecol = cols),
      args.tiplabels = list(cex = 0.3)
-     
+
 )
 #dev.off()
 
@@ -249,21 +255,21 @@ sum_sim
 plot(density(ant_sim))
 
 
-#### NYMPHS AND ADULTS GENNERA ANALYSIS ####
+#### NYMPHS AND ADULTS GENERA ANALYSIS ####
 
 # The same process made to antennomere analysis made for adults species will
 # be made for nymphs and adults at the genus level
 
 #### NYMPHS ####
 
-# filtering data, removing 0 and species out of Coreidae
+# filtering data, removing 0 and the outgroup species
 
-nymph_data = gen_nymphs%>% 
-  filter(Antennae != 0, 
+nymph_data = gen_nymphs%>%
+  filter(Antennae != 0,
          !Species_Name %in% c("Jadera_haematoloma", "Harmostes_serratus",
                               "Oedancala_sp.", "Oncopeltus_fasciatus",
                               "Largus_sp.", "Dysdercus_mimus",
-                              "Dysdercus_suturellus", "Halyomorpha_halys")) %>% 
+                              "Dysdercus_suturellus", "Halyomorpha_halys")) %>%
   mutate(Species_Name = case_when(
     Species_Name == "Holhymenia_tibialis" ~ "Holhymenia_tibialis / clavigera",
     TRUE ~ Species_Name
@@ -273,7 +279,7 @@ nymph_data = gen_nymphs%>%
 
 t_nymphs = keep.tip(t1, nymph_data$Species_Name)
 
-name.check(t_nymphs, nymph_data)
+name.check(t_nymphs, nymph_data, data.names = nymph_data$Species_Name)
 
 
 # Creating nymphs matrix so phytools can read our data
@@ -291,16 +297,16 @@ nymphs.gen.sim
 #fit.ER.fitz.nymph= fitMk(ladderize(t_nymphs), nymphs.gen.sim , model = "ER",
 #                    pi = 'fitzjohn')
 
-fit.ER.equal.nymph
-fit.ER.fitz.nymph
-
-plot(fit.ER.equal.nymph)
-
 #save(fit.ER.equal.nymph, file = './evo.models/er-equal-nymph.RData')
 #save(fit.ER.fitz.nymph, file = './evo.models/er-fitz-nymph.RData')
 
 load( file = './evo.models/er-equal-nymph.RData')
 load( file = './evo.models/er-fitz-nymph.RData')
+
+fit.ER.equal.nymph
+fit.ER.fitz.nymph
+
+plot(fit.ER.equal.nymph)
 
 #fit.ARD.equal.nymph = fitMk(ladderize(t_nymphs), nymphs.gen.sim , model = "ARD",
 #                            pi = 'equal')
@@ -328,6 +334,8 @@ load( file = './evo.models/ARD-fitz-nymph.RData')
 load(file = './evo.models/hrm-er-equal-nymph.RData')
 load(file = './evo.models/hrm-er-fitz-nymph.RData')
 
+plot(fitHRM.er.fitz.nymph)
+
 #fitHRM.ard.equal.nymph = fitHRM(ladderize(t_nymphs), nymphs.gen.sim , model = "ARD",
 #                                pi = 'equal')
 
@@ -348,60 +356,78 @@ fit_models_nymphs = anova(fit.ER.equal.nymph, fit.ARD.equal.nymph,
                        fit.ER.fitz.nymph, fit.ARD.fitz.nymph,
                        fitHRM.er.fitz.nymph, fitHRM.ard.fitz.nymph)
 
-# The chosen method was fit.HRM.er.fitz.nymph once it had the lowe AIC and
-# less degrees of freedom (d.f. = 1)
+# We chose fitHRM.er.fitz.nymph because it had the lowest AIC. It has
+# 3 parameters (d.f. = 3): one rate for each of the two rate categories and
+# one rate for switching between categories.
 
 fitHRM.er.fitz.nymph
 plot(fitHRM.er.fitz.nymph)
 
 anc.nymph = ancr(fitHRM.er.fitz.nymph)
 
-cols = setNames(c("#0E3768", "#DE627A", "green", "brown"),
-                levels(nymphs.gen.sim))
+# The HRM has 8 states: each observed state (3 to 6) in a fast and a slow
+# ("*") rate category. Colours follow the adult tree, with a lighter shade
+# for the "*" category.
+
+cols = setNames(c("#0E3768","blue", "#94129F", "#ea22fb",
+                  "#DE627A", "pink", "#ce4326", "#ff8b5f"),
+                fitHRM.er.fitz.nymph$states)
 
 
-#pdf(file = './ancestral-nymph.pdf', h = 40, w = 20)
-plot(anc.nymph,  
-     args.plotTree = list(lwd = 3, fsize = 1, 
+#pdf(file = './figures/ancestral-nymph.pdf', h = 40, w = 20)
+plot(anc.nymph,
+     args.plotTree = list(lwd = 3, fsize = 1,
                           ftype = 'i',
                           outline = T,
                           cex = 0.2, offset = 3
      ),
      args.nodelabels = list(cex = 0.3, piecol = cols),
      args.tiplabels = list(cex = 0.3)
-     
+
 )
 #dev.off()
 
 # simulation mapping
 
-#ard_sim_nymph = make.simmap( tree = ladderize(t_nymphs), x= nymphs.gen.sim , model = "ER", pi = 'fitzjohn',
-#                             nsim = 1000)
+### The best model for nymphs was the hidden-rates ER model, so the stochastic
+### maps come from that fit. simmap() takes the fitted Q matrix and root prior
+### straight from the model object. Re-running it takes a while and gives a
+### different draw each time, so it is commented out and the 1000 maps are
+### loaded instead.
 
-#save(ard_sim_nymph, file = './evo.models/ard_sim_nymph.RData')
+#set.seed(2026)
+#hrm_sim_nymph = simmap(fitHRM.er.fitz.nymph, nsim = 1000)
 
-load( file = './evo.models/ard_sim_nymph.RData')
+#save(hrm_sim_nymph, file = './evo.models/hrm_sim_nymph.RData')
 
-sum_sim_nymph = describe.simmap(ard_sim_nymph)
+load(file = './evo.models/hrm_sim_nymph.RData')
+
+# Summary with the two rate categories kept apart: "3" and "3*" are the same
+# observed state, one in the fast and one in the slow category. Changes such
+# as "3,3*" are switches of rate category, not changes in the antenna.
+
+sum_sim_nymph_hrm = describe.simmap(hrm_sim_nymph)
+sum_sim_nymph_hrm
+
+# Merging each "*" state into its observed state gives the number of changes
+# between observed states and the time spent in each one. This is the summary
+# we compare with the adults.
+
+hrm_sim_nymph_obs = hrm_sim_nymph
+for (s in levels(nymphs.gen.sim)) {
+  hrm_sim_nymph_obs = mergeMappedStates(hrm_sim_nymph_obs,
+                                        c(s, paste0(s, "*")), s)
+}
+
+sum_sim_nymph = describe.simmap(hrm_sim_nymph_obs)
 sum_sim_nymph
 
-plot(density(ard_sim_nymph))
+plot(density(hrm_sim_nymph_obs))
 
 
 #### ADULTS - GENUS LEVEL ####
 
-# Now, we will use the adults data colapsed at genus level
-
-adults_data2 = gen_adults %>% 
-  filter(Antennae != 0, 
-         !Species_Name %in% c("Jadera_haematoloma", "Harmostes_serratus",
-                              "Oedancala_sp.", "Oncopeltus_fasciatus",
-                              "Largus_sp.", "Dysdercus_mimus",
-                              "Dysdercus_suturellus", "Halyomorpha_halys")) %>% 
-  mutate(Species_Name = case_when(
-    Species_Name == "Holhymenia_tibialis" ~ "Holhymenia_tibialis / clavigera",
-    TRUE ~ Species_Name
-  ))
+# Now, we will use the adults data collapsed at genus level.
 
 # We need to make sure that only species present in nymphal data are present
 # in the adults data, so we can compare them equally
@@ -410,21 +436,23 @@ adults_data2 = gen_adults %>%
   mutate(Species_Name = case_when(
     Species_Name == "Holhymenia_tibialis" ~ "Holhymenia_tibialis / clavigera",
     TRUE ~ Species_Name
-  )) %>% 
-  filter(Antena_Adulto != 0, 
+  )) %>%
+  filter(Antennae != 0,
          !Species_Name %in% c("Jadera_haematoloma", "Harmostes_serratus",
                               "Oedancala_sp.", "Oncopeltus_fasciatus",
                               "Largus_sp.", "Dysdercus_mimus",
                               "Dysdercus_suturellus", "Halyomorpha_halys"),
-         Species_Name %in% dados.ninfa$Species_Name)
+         Species_Name %in% nymph_data$Species_Name)
 
 # Now we prune the tree to the data we have on Coreidae adults genera
 
 t_adults_gen = keep.tip(t1, adults_data2$Species_Name)
 
+name.check(t_adults_gen, adults_data2, data.names = adults_data2$Species_Name)
+
 # adults matrix
 
-adults.gen.sim = setNames(as.factor(adults_data2$Soma), adults_data2$Species_Name)
+adults.gen.sim = setNames(as.factor(adults_data2$Sum), adults_data2$Species_Name)
 adults.gen.sim
 
 # Mk model
@@ -435,16 +463,16 @@ adults.gen.sim
 #fit.ER.fitz.ag = fitMk(ladderize(t_adults_gen), adults.gen.sim , model = "ER",
 #                 pi = 'fitzjohn')
 
-fit.ER.equal.ag
-fit.ER.fitz.ag
-
-plot(fit.ER.equal.ag)
-
 #save(fit.ER.equal.ag, file = './evo.models/er-equal-adults-genus.RData')
 #save(fit.ER.fitz.ag, file = './evo.models/er-fitz-adults-genus.RData')
 
 load( file = './evo.models/er-equal-adults-genus.RData')
 load( file = './evo.models/er-fitz-adults-genus.RData')
+
+fit.ER.equal.ag
+fit.ER.fitz.ag
+
+plot(fit.ER.equal.ag)
 
 #fit.ARD.equal.ag = fitMk(ladderize(t_adults_gen), adults.gen.sim, model = "ARD",
 #                        pi = 'equal')
@@ -452,14 +480,14 @@ load( file = './evo.models/er-fitz-adults-genus.RData')
 #fit.ARD.fitz.ag = fitMk(ladderize(t_adults_gen), adults.gen.sim, model = "ARD",
 #                       pi = 'fitzjohn')
 
-fit.ARD.equal.ag
-fit.ARD.fitz.ag
-
 #save(fit.ARD.equal.ag, file = './evo.models/ARD-equal-adults-genus.RData')
 #save(fit.ARD.fitz.ag, file = './evo.models/ARD-fitz-adults-genus.RData')
 
 load( file = './evo.models/ARD-equal-adults-genus.RData')
 load( file = './evo.models/ARD-fitz-adults-genus.RData')
+
+fit.ARD.equal.ag
+fit.ARD.fitz.ag
 
 # Hidden rates model, HRM
 
@@ -502,8 +530,8 @@ fit_models_ag = anova(fit.ER.equal.ag, fit.ARD.equal.ag,
                       fit.ER.fitz.ag, fit.ARD.fitz.ag,
                       fitHRM.er.fitz.ag, fitHRM.ard.fitz.ag)
 
-# It was chosen the ER fitz model once it ad the lowest AIC value abd
-# degree of freedom of 1
+# We chose the ER fitzjohn model: it had the lowest AIC and
+# only one parameter (d.f. = 1)
 
 fit.ER.fitz.ag
 plot(fit.ER.fitz.ag)
@@ -511,11 +539,14 @@ plot(fit.ER.fitz.ag)
 
 #### PLOTTING NYMPHS AND ADULTS GENERA TREE TOGETHER ####
 
-#Nymph 
+#Nymph
 anc.nymph = ancr(fitHRM.er.fitz.nymph, hide.hidden = F)
 
 #Adults
 anc.ag = ancr(fit.ER.fitz.ag)
+
+# The nymph and adult genus trees have the same tips and topology, so both
+# reconstructions can be drawn on the same tree.
 
 tree_plot = fit.ER.fitz.ag$tree
 
@@ -524,7 +555,7 @@ anc.ag$tree = tree_plot
 
 states = colnames(anc.nymph$ace)
 cols = setNames(
-  c("#0E3768","blue", "#94129F", "#ea22fb",  
+  c("#0E3768","blue", "#94129F", "#ea22fb",
     "#DE627A", "pink", "#ce4326", "#ff8b5f"),
   states
 )
@@ -549,7 +580,6 @@ tip.pies = as.matrix(tip.pies)
 rownames(tip.pies) = anc.nymph$tree$tip.label
 colnames(tip.pies) = states2
 
-getwd()
 #png(file = './figures/ancestral-facing.png', height = 400, width = 350,
 #    units = "mm", res = 300)
 #pdf(file = './figures/antennnomere_facing.pdf',
